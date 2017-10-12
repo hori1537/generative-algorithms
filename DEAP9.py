@@ -163,9 +163,9 @@ YOUN_target= 90.0   #0
 
 
 
-number_gene = 1000
-npop=100
-ngen=5
+n_gene = 1000
+n_population=100
+n_generation=50
 compo_list = [0,2,5,7,8,9,10,11]
 
 creator.create("FitnessMulti", base.Fitness, weights=fit_weights)

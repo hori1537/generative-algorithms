@@ -1,13 +1,17 @@
 from __future__ import print_function
+# -*- coding: utf-8 -*-
+
 import random
 import numpy as np
-#import time
 import pandas as pd
+
+#import time
 #import operator
 #import math
+#from pprint import pprint
+
 import xlrd
 import os.path
-#from pprint import pprint
 
 import keras
 from keras.utils import plot_model
@@ -25,6 +29,7 @@ from deap import gp
 
 from Setting_Param import ADDRESS
 
+###import parameters of generative algorithm from ga_setting.xlsx
 
 xlfile = "ga_setting2.xlsx"
 if os.path.exists(xlfile):
@@ -34,9 +39,6 @@ if os.path.exists(xlfile):
     sheet2 = xls.sheet_by_index(1)
     sheet3 = xls.sheet_by_index(2)
 
-    #for col_index in range(sheet1.ncols):
-    #    sheet1_col = sheet1.col(col_index)
-
     sht1_col = [sheet1.col(col_index) for col_index in range(sheet1.ncols)]
     sht2_col = [sheet2.col(col_index) for col_index in range(sheet2.ncols)]
     sht2_col = [sheet3.col(col_index) for col_index in range(sheet3.ncol3)]
@@ -45,14 +47,9 @@ if os.path.exists(xlfile):
     sht2_row = sheet2.row(0)
     sht3_row = sheet3.row(0)
     
-    print(sht1_row)
-    print(sht2_row)
-    print(sht3_row)
-
-    #for col_index in range(sheet2.ncols):
-    #    sheet2_col = sheet2.col(col_index)
-
-    #print(sheet1_col)
+    #print(sht1_row)
+    #print(sht2_row)
+    #print(sht3_row)
 
     #SHEETS1
     #col[0]:index (int)					: 0,1,2,3,4,5,...
@@ -75,57 +72,59 @@ if os.path.exists(xlfile):
     #col[7]:under (boolean)
     #col[8]:equal (boolean)
     #col[9]:composition ratio for must use (float)
+    
+    #SHEETS3
+    #col[0]:name
+    #col[1]:number of gene of individual            :num_gene
+    #col[2]:number of individual in population      :num_population
+    #col[3]:number of populations (generations)     :num_generation
+    #col[4]:proberbility of crossover of individual :cxpb
+    #col[5]:probability of mutatio of individual    :mutpb
+    #col[6]:probability of mutation of each gene    :mut_indpb
+    
+### import target values of each parameter(Abbe number etc.)
+param_over      = sheet1_col[5]
+param_under     = sheet1_col[6]
+param_equal     = sheet1_col[7]
+param_tgt       = sheet1_col[8]
+param_avg       = sheet1_col[9]
+param_std       = sheet1_col[11]
+
+### import target component of glass
+compo_must      = sheet2_col[3]
+compo_can       = sheet2_col[4]
+compo_better    = sheet2_col[5]
+compo_no        = sheet2_col[6]
+compo_over      = sheet2_col[7]
+compo_under     = sheet2_col[8]
+compo_equal     = sheet2_col[9]
+compo_tgt       = sheet2_col[10]
+
+### default values of generative algorithm
+num_gene        = 1000
+num_population  = 1000
+num_generation  = 100
+cxpb            = 0.7
+mutpb           = 0.05
+mut_indpb       = 0.5
+
+### setting values of generative algorithm
+num_gene        = sheet3_col[2][4]
+num_population  = sheet3_col[3][4]
+num_generation  = sheet3_col[4][4]
+cxpb            = sheet3_col[5][4]
+mutpb           = sheet3_col[6][4]
+mut_indpb       = sheet3_col[7][4]
+
 
 param_name = ['ABBE','DENS','FRAC','POIS','YOUN']
 param_num = 5
 fit_weights=[0,-1,-1,-1,0,0]
 max_component_size = 62
-
-model = [0] * param_num
-
-for i in range(5):
-    model[i]= keras.models.load_model('C:\deeplearning/model/model_' + param_name[i] + '.h5')
-
-#param_tgt = np.empty(param_num)
-#target values of parameters
-#param_avg = np.empty(param_num)
-#param_std = np.empty(param_num)
-
-param_over = sheet1_col[4]
-param_under = sheet1_col[5]
-param_equal = sheet1_col[6]
-param_tgt = sheet1_col[7]
-param_avg = sheet1_col[9]
-param_std = sheet1_col[10]
+compo_list      = [0,2,5,7,8,9,10,11]
 
 
-compo_list = [0,2,5,7,8,9,10,11]
 
-
-compo_must = sheet2_col[3]
-compo_can = sheet2_col[4]
-compo_better = sheet2_col[5]
-compo_no = sheet2_col[6]
-compo_over = sheet2_col[7]
-compo_under = sheet2_col[8]
-compo_equal = sheet2_col[9]
-compo_tgt = sheet2_col[10]
-
-#default values
-num_gene            = 1000
-num_population      = 1000
-num_generation      = 100
-cxpb                = 0.7
-mutpb               = 0.05
-indpb               = 0.5
-
-#setting values
-num_gene = sheet3_col[2][4]
-num_population = sheet3_col[3][4]
-num_generation = sheet3_col[4][4]
-cxpb =sheet3_col[5][4]
-mutpb=sheet3_col[6][4]
-indpb =sheet3_col[7][4]
 
 #compo_tgt = 5     #-1
 
@@ -173,21 +172,25 @@ YOUN_target= 90.0   #0
 #LiO
 #Na2O   19.2
 #K2O    9.98
-
 #[0,2,5,7,8]
-
 #density    3.227
 #Poison     0.28
 #Frac       0.47
 
 
-###creator
+### import predict models of deeplearning
+model = [0] * param_num
+for i in range(5):
+    model[i]= keras.models.load_model('C:\deeplearning/model/model_' + param_name[i] + '.h5')
+
+    
+### creator
 
 creator.create("FitnessMulti", base.Fitness, weights=fit_weights)
 creator.create("Individual", np.ndarray, fitness=creator.FitnessMulti)
 #creator.create("Individual", list, fitness=creator.FitnessMulti)
 
-###toolbox
+### toolbox
 
 toolbox = base.Toolbox()
 toolbox.register("attr_bool", np.random.choice, compo_list)

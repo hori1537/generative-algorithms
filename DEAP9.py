@@ -53,13 +53,14 @@ if os.path.exists(xlfile):
 
     #SHEETS1
     #col[0]:index (int)					: 0,1,2,3,4,5,...
-    #col[1]:name of parameter (string)	: SiO2, B2O3, Al2O3,...
-    #col[2]:Priority (float)			: 1, 0.5, 1, 0, 0,...
-    #col[3]:over (boolean)
-    #col[4]:under (boolean)
-    #col[5]:equal (boolean)
-    #col[6]:target value (float)        
-    #col[7]:unit of target value (string)
+    #col[1]:name of parameter (string)	: Abbe number, Density at RT
+    #col[2]:Abbreviation                : ABBE, DENS, FRAC
+    #col[3]:Priority (float)			: 1, 0.5, 1, 0, 0,...
+    #col[4]:over (boolean)
+    #col[5]:under (boolean)
+    #col[6]:equal (boolean)
+    #col[7]:target value (float)        
+    #col[8]:unit of target value (string)
     
     #SHEETS2
     #col[0]:index (int)					: 0,1,2,3,4,5,...
@@ -83,47 +84,50 @@ if os.path.exists(xlfile):
     #col[6]:probability of mutation of each gene    :mut_indpb
     
 ### import target values of each parameter(Abbe number etc.)
-param_over      = sheet1_col[5]
-param_under     = sheet1_col[6]
-param_equal     = sheet1_col[7]
-param_tgt       = sheet1_col[8]
+param_name      = sheet1_col[2]
+param_priority  = sheet1_col[3]
+param_over      = sheet1_col[4]
+param_under     = sheet1_col[5]
+param_equal     = sheet1_col[6]
+param_tgt       = sheet1_col[7]
+param_unit      = sheet1_col[8]
 param_avg       = sheet1_col[9]
-param_std       = sheet1_col[11]
+param_std       = sheet1_col[10]
 
 ### import target component of glass
-compo_must      = sheet2_col[3]
-compo_can       = sheet2_col[4]
-compo_better    = sheet2_col[5]
-compo_no        = sheet2_col[6]
-compo_over      = sheet2_col[7]
-compo_under     = sheet2_col[8]
-compo_equal     = sheet2_col[9]
-compo_tgt       = sheet2_col[10]
+compo_must      = sheet2_col[2]
+compo_can       = sheet2_col[3]
+compo_better    = sheet2_col[4]
+compo_no        = sheet2_col[5]
+compo_over      = sheet2_col[6]
+compo_under     = sheet2_col[7]
+compo_equal     = sheet2_col[8]
+compo_tgt       = sheet2_col[9]
 
 ### default values of generative algorithm
 num_gene        = 1000
 num_population  = 1000
-num_generation  = 100
+num_generation  = 10
 cxpb            = 0.7
 mutpb           = 0.05
 mut_indpb       = 0.5
 
 ### setting values of generative algorithm
-num_gene        = sheet3_col[2][4]
-num_population  = sheet3_col[3][4]
-num_generation  = sheet3_col[4][4]
-cxpb            = sheet3_col[5][4]
-mutpb           = sheet3_col[6][4]
-mut_indpb       = sheet3_col[7][4]
+num_gene        = sheet3_col[1][3]
+num_population  = sheet3_col[2][3]
+num_generation  = sheet3_col[3][3]
+cxpb            = sheet3_col[4][3]
+mutpb           = sheet3_col[5][3]
+mut_indpb       = sheet3_col[6][3]
 
 
-param_name = ['ABBE','DENS','FRAC','POIS','YOUN']
+#param_name = ['ABBE','DENS','FRAC','POIS','YOUN']
 param_num = 5
-fit_weights=[0,-1,-1,-1,0,0]
-max_component_size = 62
-compo_list      = [0,2,5,7,8,9,10,11]
 
-
+fit_weights         = np.array(param_priority) * (-1)
+max_component_size  = 62
+#compo_list          = [0,2,5,7,8,9,10,11]
+compo_list          = np.nonzero(compo_must)
 
 
 #compo_tgt = 5     #-1
@@ -185,13 +189,11 @@ for i in range(5):
 
     
 ### creator
-
 creator.create("FitnessMulti", base.Fitness, weights=fit_weights)
 creator.create("Individual", np.ndarray, fitness=creator.FitnessMulti)
 #creator.create("Individual", list, fitness=creator.FitnessMulti)
 
 ### toolbox
-
 toolbox = base.Toolbox()
 toolbox.register("attr_bool", np.random.choice, compo_list)
 #toolbox.register("attr_bool", np.random.randint, 0, 3)
@@ -205,8 +207,6 @@ def analyze_Gene(individual):
     minlength=max_component_size
     
     #individual = np.array(individual)
-    
-    
     component = np.bincount(individual,minlength = minlength)
     component = np.array(component)
     

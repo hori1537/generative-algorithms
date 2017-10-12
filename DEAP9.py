@@ -26,29 +26,33 @@ from deap import gp
 from Setting_Param import ADDRESS
 
 
-xlfile = "ga_setting.xlsx"
+xlfile = "ga_setting2.xlsx"
 if os.path.exists(xlfile):
     print('path.exist')
     xls = xlrd.open_workbook(xlfile)
     sheet1 = xls.sheet_by_index(0)
     sheet2 = xls.sheet_by_index(1)
+    sheet3 = xls.sheet_by_index(2)
 
     #for col_index in range(sheet1.ncols):
     #    sheet1_col = sheet1.col(col_index)
 
     sht1_col = [sheet1.col(col_index) for col_index in range(sheet1.ncols)]
     sht2_col = [sheet2.col(col_index) for col_index in range(sheet2.ncols)]
+    sht2_col = [sheet3.col(col_index) for col_index in range(sheet3.ncol3)]
 
     sht1_row = sheet1.row(0)
     sht2_row = sheet2.row(0)
+    sht3_row = sheet3.row(0)
+    
     print(sht1_row)
     print(sht2_row)
-
+    print(sht3_row)
 
     #for col_index in range(sheet2.ncols):
     #    sheet2_col = sheet2.col(col_index)
 
-    print(sheet1_col)
+    #print(sheet1_col)
 
     #SHEETS1
     #col[0]:index (int)					: 0,1,2,3,4,5,...
@@ -71,8 +75,6 @@ if os.path.exists(xlfile):
     #col[7]:under (boolean)
     #col[8]:equal (boolean)
     #col[9]:composition ratio for must use (float)
-
-
 
 param_name = ['ABBE','DENS','FRAC','POIS','YOUN']
 param_num = 5
@@ -97,16 +99,33 @@ param_avg = sheet1_col[9]
 param_std = sheet1_col[10]
 
 
+compo_list = [0,2,5,7,8,9,10,11]
+
+
 compo_must = sheet2_col[3]
-compo_can = sheet1_col[4]
-compo_better = sheet1_col[5]
-compo_no = sheet1_col[6]
-compo_over = sheet1_col[7]
-compo_under = sheet1_col[8]
-compo_equal = sheet1_col[9]
-compo_tgt = sheet1_col[10]
+compo_can = sheet2_col[4]
+compo_better = sheet2_col[5]
+compo_no = sheet2_col[6]
+compo_over = sheet2_col[7]
+compo_under = sheet2_col[8]
+compo_equal = sheet2_col[9]
+compo_tgt = sheet2_col[10]
 
+#default values
+num_gene            = 1000
+num_population      = 1000
+num_generation      = 100
+cxpb                = 0.7
+mutpb               = 0.05
+indpb               = 0.5
 
+#setting values
+num_gene = sheet3_col[2][4]
+num_population = sheet3_col[3][4]
+num_generation = sheet3_col[4][4]
+cxpb =sheet3_col[5][4]
+mutpb=sheet3_col[6][4]
+indpb =sheet3_col[7][4]
 
 #compo_tgt = 5     #-1
 
@@ -162,25 +181,20 @@ YOUN_target= 90.0   #0
 #Frac       0.47
 
 
-
-n_gene = 1000
-n_population=100
-n_generation=50
-compo_list = [0,2,5,7,8,9,10,11]
+###creator
 
 creator.create("FitnessMulti", base.Fitness, weights=fit_weights)
 creator.create("Individual", np.ndarray, fitness=creator.FitnessMulti)
-
 #creator.create("Individual", list, fitness=creator.FitnessMulti)
 
+###toolbox
 
 toolbox = base.Toolbox()
-
 toolbox.register("attr_bool", np.random.choice, compo_list)
 #toolbox.register("attr_bool", np.random.randint, 0, 3)
-
 toolbox.register("individual", tools.initRepeat, creator.Individual, toolbox.attr_bool, n=number_gene)
 toolbox.register("population", tools.initRepeat, list, toolbox.individual)
+
 
 def analyze_Gene(individual):
     #convert from individual to component and component_size

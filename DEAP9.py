@@ -1,4 +1,3 @@
-from __future__ import print_function
 # -*- coding: utf-8 -*-
 
 import random
@@ -187,7 +186,6 @@ model = [0] * param_num
 for i in range(5):
     model[i]= keras.models.load_model('C:\deeplearning/model/model_' + param_name[i] + '.h5')
 
-    
 ### creator
 creator.create("FitnessMulti", base.Fitness, weights=fit_weights)
 creator.create("Individual", np.ndarray, fitness=creator.FitnessMulti)

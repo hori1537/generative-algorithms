@@ -370,6 +370,6 @@ if __name__ == "__main__":
     print(hof0_comp)
 
     for i in range(param_num):
-        print(param_name[i], '_better of this pop is ', param_hof0[i])
+        print(param_name[i], '_hall of fame is ', param_hof0[i])
 
     print('finish')

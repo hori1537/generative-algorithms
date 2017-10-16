@@ -9,8 +9,13 @@ import pandas as pd
 # import math
 # from pprint import pprint
 
+import tkinter
+from tkinter import filedialog
+
 import xlrd
+import os
 import os.path
+
 
 import keras
 from keras.utils import plot_model
@@ -28,9 +33,23 @@ from deap import gp
 
 from Setting_Param import ADDRESS
 
-###import parameters of generative algorithm from ga_setting.xlsx
-
+### default Excel file of GA setting
 xlfile = "ga_setting.xlsx"
+
+### choose the Excel file of GA setting with tkinter
+tk = tkinter.Tk()
+tk.withdrow()
+
+currentdirectory = os.getcwd()
+
+args = { “initialdir” : currentdirectory,
+        “filetypes” : [(“テキストファイル”, “*.xlsx”)],
+        “title” : '遺伝的アルゴリズムの設定ファイル(xlsx)を選択'
+        }
+
+xlfile = tkinter.filedialog.askopenfilename(**args)
+
+### import parameters of generative algorithm from ga_setting.xlsx or choosen file
 if os.path.exists(xlfile):
     print('path.exist')
     xls = xlrd.open_workbook(xlfile)
@@ -118,6 +137,7 @@ num_gene = 1000
 num_population = 1000
 num_generation = 10
 cxpb = 0.7
+cx_indpb = 0.5
 mutpb = 0.05
 mut_indpb = 0.5
 
@@ -134,8 +154,6 @@ print(num_gene)
 param_num = 5
 
 print(param_priority[1:])
-
-
 
 aaa= np.array(param_priority)
 print('aaa' ,aaa)

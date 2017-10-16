@@ -143,7 +143,7 @@ print('aaa' ,aaa)
 fit_weights = np.array(param_priority[1:]) * (-1)
 max_component_size = 62
 # compo_list          = [0,2,5,7,8,9,10,11]
-compo_list = np.nonzero(compo_must)
+#compo_list = np.nonzero(compo_must)
 
 # compo_tgt = 5     #-1
 
@@ -301,31 +301,29 @@ def mutUniformINT(individual, min_ind, max_ind, indpb):
     return individual,
 
 
-def mutUniformINTfromlist(individual, compo_list, indpb):
+def mutUniformINTfromlist(individual, INT_list, indpb):
     # mutation:gene choosed from compo_list
 
     size = len(individual)
     # print('size is ' , size)
     for i in range(size):
         if random.random() < indpb:
-            individual[i] = np.random.choice(compo_list)
+            individual[i] = np.random.choice(INT_list)
     return individual,
 
 
 toolbox.register("evaluate", evalERROR)
 toolbox.register("mate", tools.cxUniform, indpb=cx_indpb)
-toolbox.register("mutate", mutUniformINTfromlist, compo_list=compo_list, indpb=mut_indpb)
+toolbox.register("mutate", mutUniformINTfromlist, INT_list=compo_list, indpb=mut_indpb)
 # toolbox.register("mutate", mutUniformINT, min_ind=min_ind, max_ind=max_ind, indpb=0.1)
 
-# toolbox.register("select", tools.selTournament, tournsize=3)
 toolbox.register("select", tools.selNSGA2)
 # toolbox.register("select", tools.selRoulette, k=npop)
-
+# toolbox.register("select", tools.selTournament, tournsize=3)
 
 def main():
     random.seed(64)
     pop = toolbox.population(n=npop)
-
     hof = tools.HallOfFame(npop, similar=np.array_equal)
 
     # hof = tools.ParetoFront(similar=np.array_equal)
@@ -351,7 +349,6 @@ def main():
     param_better = evalProperties(better_comp)
 
     # print('better ind is ', better_ind)
-
     # for i in range(param_num):
     #    print(param_name[i], '_better of this pop is ' , param_better[i])
 

@@ -312,15 +312,12 @@ def mutUniformINTfromlist(individual, compo_list, indpb):
 
 
 toolbox.register("evaluate", evalERROR)
-toolbox.register("mate", tools.cxUniform, indpb=0.7)
-
-toolbox.register("mutate", mutUniformINTfromlist, compo_list=compo_list, indpb=0.1)
+toolbox.register("mate", tools.cxUniform, indpb=0.5)
+toolbox.register("mutate", mutUniformINTfromlist, compo_list=compo_list, indpb=mut_indpb)
 # toolbox.register("mutate", mutUniformINT, min_ind=min_ind, max_ind=max_ind, indpb=0.1)
 
 # toolbox.register("select", tools.selTournament, tournsize=3)
 toolbox.register("select", tools.selNSGA2)
-
-
 # toolbox.register("select", tools.selRoulette, k=npop)
 
 

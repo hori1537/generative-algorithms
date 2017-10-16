@@ -41,10 +41,15 @@ if os.path.exists(xlfile):
     sht1_col = [sheet1.col(col_index) for col_index in range(sheet1.ncols)]
     sht2_col = [sheet2.col(col_index) for col_index in range(sheet2.ncols)]
     sht3_col = [sheet3.col(col_index) for col_index in range(sheet3.ncols)]
+    
+    sht1_col = [sheet1.col_value(col_index) for col_index in range(sheet1.ncols)]
+    sht2_col = [sheet2.col_value(col_index) for col_index in range(sheet2.ncols)]
+    sht3_col = [sheet3.col_value(col_index) for col_index in range(sheet3.ncols)]
 
-    sht1_row = sheet1.row(0)
-    sht2_row = sheet2.row(0)
-    sht3_row = sheet3.row(0)
+    
+    sht1_row = sheet1.row_value(0)
+    sht2_row = sheet2.row_value(0)
+    sht3_row = sheet3.row_value(0)
 
     # print(sht1_row)
     # print(sht2_row)
@@ -83,13 +88,12 @@ if os.path.exists(xlfile):
     # col[6]:probability of mutation of each gene    :mut_indpb
 
 else:
-    print('pass not exist')
+    print('pass (', xlfile, ') does not exist')
 
-### import target values of each parameter(Abbe number etc.)
+### import target values of each parameter(Abbe number etc.) from xlsx
 param_name      = sht1_col[1][1:5]
 param_priority  = sht1_col[2][1:5]
-print(isinstance(param_priority,list))
-
+#print(isinstance(param_priority,list))
 param_over      = sht1_col[3][1:5]
 param_under     = sht1_col[4][1:5]
 param_equal     = sht1_col[5][1:5]
@@ -98,7 +102,7 @@ param_unit      = sht1_col[7][1:5]
 param_avg       = sht1_col[8][1:5]
 param_std       = sht1_col[9][1:5]
 
-### import target component of glass
+### import target component of glass from xlsx
 compo_must      = sht2_col[2][1:62]
 compo_can       = sht2_col[3][1:62]
 compo_better    = sht2_col[4][1:62]
@@ -108,7 +112,7 @@ compo_under     = sht2_col[7][1:62]
 compo_equal     = sht2_col[8][1:62]
 compo_tgt       = sht2_col[9][1:62]
 
-### default values of generative algorithm
+### default values of generative algorithm from xlsx
 num_gene = 1000
 num_population = 1000
 num_generation = 10
@@ -116,7 +120,7 @@ cxpb = 0.7
 mutpb = 0.05
 mut_indpb = 0.5
 
-### setting values of generative algorithm
+### setting values of generative algorithm from xlsx
 num_gene        = sht3_col[1][3]
 num_population  = sht3_col[2][3]
 num_generation  = sht3_col[3][3]

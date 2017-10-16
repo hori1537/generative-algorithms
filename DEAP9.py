@@ -84,8 +84,9 @@ if os.path.exists(xlfile):
     # col[2]:number of individual in population      :num_population
     # col[3]:number of populations (generations)     :num_generation
     # col[4]:proberbility of crossover of individual :cxpb
-    # col[5]:probability of mutatio of individual    :mutpb
-    # col[6]:probability of mutation of each gene    :mut_indpb
+    # col[5]:proberbility of crossover of individual :cx_indpb
+    # col[6]:probability of mutatio of individual    :mutpb
+    # col[7]:probability of mutation of each gene    :mut_indpb
 
 else:
     print('pass (', xlfile, ') does not exist')
@@ -312,7 +313,7 @@ def mutUniformINTfromlist(individual, compo_list, indpb):
 
 
 toolbox.register("evaluate", evalERROR)
-toolbox.register("mate", tools.cxUniform, indpb=0.5)
+toolbox.register("mate", tools.cxUniform, indpb=cx_indpb)
 toolbox.register("mutate", mutUniformINTfromlist, compo_list=compo_list, indpb=mut_indpb)
 # toolbox.register("mutate", mutUniformINT, min_ind=min_ind, max_ind=max_ind, indpb=0.1)
 

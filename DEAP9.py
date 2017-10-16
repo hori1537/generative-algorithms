@@ -30,7 +30,7 @@ from Setting_Param import ADDRESS
 
 ###import parameters of generative algorithm from ga_setting.xlsx
 
-xlfile = "ga_setting2.xlsx"
+xlfile = "ga_setting.xlsx"
 if os.path.exists(xlfile):
     print('path.exist')
     xls = xlrd.open_workbook(xlfile)

@@ -17,11 +17,11 @@ import os
 import os.path
 
 import keras
-from keras.utils import plot_model
-from keras.models import Sequential
-from keras.layers import Dense, Dropout, Flatten
-from keras import backend as K
-from keras.layers import Activation
+#from keras.utils import plot_model
+#from keras.models import Sequential
+#from keras.layers import Dense, Dropout, Flatten
+#from keras import backend as K
+#from keras.layers import Activation
 
 # from sklearn.model_selection import train_test_split
 from deap import algorithms
@@ -29,6 +29,7 @@ from deap import base
 from deap import creator
 from deap import tools
 from deap import gp
+
 
 ### default Excel file of GA setting
 xlfile = "ga_setting.xlsx"

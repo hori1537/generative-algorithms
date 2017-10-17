@@ -16,7 +16,6 @@ import xlrd
 import os
 import os.path
 
-
 import keras
 from keras.utils import plot_model
 from keras.models import Sequential
@@ -41,13 +40,11 @@ tk = tkinter.Tk()
 tk.withdrow()
 
 currentdirectory = os.getcwd()
+xlfile =  filedialog.askopenfilename(initialdir = currentdirectory,
+                                          title = "Setting file of Generative Algorithm",
+                                          filetypes = (("Excel File","*.xlsx")))
+#xlfile = tkinter.filedialog.askopenfilename(**args)
 
-args = { “initialdir” : currentdirectory,
-        “filetypes” : [(“テキストファイル”, “*.xlsx”)],
-        “title” : '遺伝的アルゴリズムの設定ファイル(xlsx)を選択'
-        }
-
-xlfile = tkinter.filedialog.askopenfilename(**args)
 
 ### import parameters of generative algorithm from ga_setting.xlsx or choosen file
 if os.path.exists(xlfile):
@@ -225,19 +222,11 @@ creator.create("FitnessMulti", base.Fitness, weights=fit_weights)
 creator.create("Individual", np.ndarray, fitness=creator.FitnessMulti)
 # creator.create("Individual", list, fitness=creator.FitnessMulti)
 
-### toolbox
-toolbox = base.Toolbox()
-toolbox.register("attr_bool", np.random.choice, compo_list)
-# toolbox.register("attr_bool", np.random.randint, 0, 3)
-toolbox.register("individual", tools.initRepeat, creator.Individual, toolbox.attr_bool, n=number_gene)
-toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 
 
+### convert from individual to component and component_size
 def analyze_Gene(individual):
-    # convert from individual to component and component_size
-
     minlength = max_component_size
-
     # individual = np.array(individual)
     component = np.bincount(individual, minlength=minlength)
     component = np.array(component)
@@ -251,7 +240,7 @@ def analyze_Gene(individual):
 
     return [component, component_size]
 
-
+### evaluate(predict) properties from glass component using deeplearning model by keras
 def evalProperties(component):
     # evaluate the properties from component
 
@@ -264,22 +253,21 @@ def evalProperties(component):
 
     return param_predict
 
-
+### nomalize the properties
 def nomalization(param):
     # parameter nomalization
 
     param_nom = np.empty(param_num)
-
     param_nom = (param - param_avg) / param_std
 
     '''
     for i in range(param_num):
         param_nom[i] = (param[i]-param_avg[i])/param_std[i]
-
     '''
+        
     return param_nom
 
-
+### evaluate the squared error:target value and predict value
 def evalERROR(individual):
     # evaluation square error of parameters
 
@@ -307,7 +295,7 @@ def evalERROR(individual):
     return param_square_error[0], param_square_error[1], param_square_error[2], param_square_error[3], \
            param_square_error[4], component_size_square_error
 
-
+### mutatie each gene: convert to integer
 def mutUniformINT(individual, min_ind, max_ind, indpb):
     # mutation:gene choosed from min_ind to max_ind
 
@@ -318,7 +306,7 @@ def mutUniformINT(individual, min_ind, max_ind, indpb):
             individual[i] = np.random.randint(min, max)
     return individual,
 
-
+### mutatie each gene: convert to integer in INT_list
 def mutUniformINTfromlist(individual, INT_list, indpb):
     # mutation:gene choosed from compo_list
 
@@ -329,7 +317,14 @@ def mutUniformINTfromlist(individual, INT_list, indpb):
             individual[i] = np.random.choice(INT_list)
     return individual,
 
+### toolbox:attr_bool,individial,population
+toolbox = base.Toolbox()
+toolbox.register("attr_bool", np.random.choice, compo_list)
+# toolbox.register("attr_bool", np.random.randint, 0, 3)
+toolbox.register("individual", tools.initRepeat, creator.Individual, toolbox.attr_bool, n=number_gene)
+toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 
+### toolbox:evaluate,mate,mutate,select
 toolbox.register("evaluate", evalERROR)
 toolbox.register("mate", tools.cxUniform, indpb=cx_indpb)
 toolbox.register("mutate", mutUniformINTfromlist, INT_list=compo_list, indpb=mut_indpb)
@@ -338,6 +333,7 @@ toolbox.register("mutate", mutUniformINTfromlist, INT_list=compo_list, indpb=mut
 toolbox.register("select", tools.selNSGA2)
 # toolbox.register("select", tools.selRoulette, k=npop)
 # toolbox.register("select", tools.selTournament, tournsize=3)
+
 
 def main():
     random.seed(64)
@@ -375,8 +371,6 @@ def main():
 
 if __name__ == "__main__":
     pop, stats, hof = main()
-    # print('hof is', hof)
-    # pprint(hof)
     hof0_comp, hof0_component_size = analyze_Gene(hof[0])
 
     param_hof0 = evalProperties(hof0_comp)

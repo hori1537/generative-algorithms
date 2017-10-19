@@ -36,7 +36,7 @@ from deap import gp
 xlfile = "ga_setting.xlsx"
 
 ### choose the Excel file of GA setting with tkinter
-'''
+
 tk = tkinter.Tk()
 #tk.withdrow()
 
@@ -45,7 +45,7 @@ xlfile = filedialog.askopenfilename(initialdir=currentdirectory,
                                     title="Setting file of Generative Algorithm",
                                     filetypes=[('Excel File', '*.*')])
 
-'''
+
 
 ### import parameters of generative algorithm from ga_setting.xlsx or choosen file
 if os.path.exists(xlfile):
@@ -167,11 +167,11 @@ compo_tgt = 5     #-1
 
 ### default values of generative algorithm
 num_gene        = 1000
-num_population  = 1000
-num_generation  = 100
+num_population  = 2000
+num_generation  = 300
 cxpb            = 0.7
 cx_indpb        = 0.5
-mutpb           = 0.05
+mutpb           = 0.1
 mut_indpb       = 0.5
 
 fit_weights = [-1,-1,-1,0,0,0]

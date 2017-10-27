@@ -36,15 +36,15 @@ from deap import gp
 xlfile = "ga_setting.xlsx"
 currentdirectory = os.getcwd()
 
+'''
 ### choose the Excel file of GA setting with tkinter
-
 tk = tkinter.Tk()
-
 
 xlfile = filedialog.askopenfilename(initialdir=currentdirectory,
                                     title="Setting file of Generative Algorithm",
                                     filetypes=[('Excel File', '*.*')])
 
+'''
 
 ### import parameters of generative algorithm from ga_setting.xlsx or choosen file
 if os.path.exists(xlfile):
@@ -120,6 +120,9 @@ param_unit          = np.array(sht1_col[8][1:6])
 param_avg           = np.array(sht1_col[9][1:6])
 param_std           = np.array(sht1_col[10][1:6])
 
+param_num           = len(param_formalname)
+print('param_num is ',param_num)
+
 ### import target component of glass from xlsx
 
 compo_name          = np.array(sht2_col[1][1:63])
@@ -134,6 +137,9 @@ compo_under         = np.array(sht2_col[7][1:63])
 compo_equal         = np.array(sht2_col[8][1:63])
 compo_tgt           = np.array(sht2_col[9][1:63])
 
+max_component_size  = len(compo_name)
+print('max_component_size is ', max_component_size)
+
 ### setting values of generative algorithm from xlsx
 
 num_gene            = sht3_col[1][3]
@@ -141,7 +147,7 @@ num_gene            = int(num_gene)
 num_population      = sht3_col[2][3]
 num_population      = int(num_population)
 num_generation      = sht3_col[3][3]
-num_generation      =int(num_generation)
+num_generation      = int(num_generation)
 cxpb                = sht3_col[4][3]
 cx_indpb            = sht3_col[5][3]
 mutpb               = sht3_col[6][3]
@@ -156,19 +162,24 @@ print('num_gene_',num_gene)
 print('num_gene_',num_gene)
 print('num_gene_',num_gene)
 
+### fit_weights of 5 parameters from xlsx
 fit_weights = np.array(param_priority) * (-1)
+
+### add fit_weight of component number
 fit_weights = np.append(fit_weights , 0)
-print('fit_weights_',fit_weights)
-
-compo_must_can = np.array(compo_must) + np.array(compo_can)
-print(compo_must_can)
-
-#compo_list = compo_must_can
-#compo_list          = np.nonzero(compo_must)
+fit_weights = list(fit_weights)
 
 
+compo_must_and_can = np.array(compo_must) + np.array(compo_can)
+print('compo_must_and_can is ' ,compo_must_and_can)
 
-compo_tgt = 5     #-1
+#compo_list          = compo_must_and_can
+compo_list          = np.nonzero(compo_must_and_can)
+compo_list          = np.array(compo_list)
+compo_list          = compo_list.reshape(-1,)
+#compo_list          = list(compo_list)
+
+compo_tgt           = 5     #-1
 
 '''
 ### default values of generative algorithm
@@ -182,16 +193,16 @@ mut_indpb       = 0.5
 
 is_grid_search     = 0
 
-
-fit_weights = [-1,-1,-1,0,0,0]
-
-### defalut values of setting
-param_num           = 5
-max_component_size  = 62
-compo_list          = [0,2,5,7,8,9,10,11]
-
 '''
 
+### defalut values of setting
+#param_num           = 5
+#max_component_size  = 62
+#compo_list          = [0,2,5,7,8,9,10,11]
+
+
+
+'''
 ### defalut param_tgt
 
 param_name = ['ABBE','DENS','FRAC','POIS','YOUN']
@@ -217,6 +228,7 @@ param_std[1] = 0.803472
 param_std[2] = 0.63381
 param_std[3] = 0.03073
 param_std[4] = 48.2235
+'''
 
 # 7241
 # GP09-308146
@@ -248,6 +260,7 @@ YOUN_target= 90.0   #0
 
 
 ### import predict models of deeplearning
+
 
 model = [0] * param_num
 for i in range(5):

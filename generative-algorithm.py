@@ -34,17 +34,16 @@ from deap import gp
 
 ### default Excel file of GA setting
 xlfile = "ga_setting.xlsx"
+currentdirectory = os.getcwd()
 
 ### choose the Excel file of GA setting with tkinter
 
 tk = tkinter.Tk()
-#tk.withdrow()
 
-currentdirectory = os.getcwd()
+
 xlfile = filedialog.askopenfilename(initialdir=currentdirectory,
                                     title="Setting file of Generative Algorithm",
                                     filetypes=[('Excel File', '*.*')])
-
 
 
 ### import parameters of generative algorithm from ga_setting.xlsx or choosen file
@@ -109,6 +108,7 @@ else:
 
 ### import target values of each parameter(Abbe number etc.) from xlsx
 '''
+'''
 param_formalname    = np.array(sht1_col[1][1:6])
 param_name          = np.array(sht1_col[2][1:6])
 param_priority      = np.array(sht1_col[3][1:6])
@@ -121,6 +121,10 @@ param_avg           = np.array(sht1_col[9][1:6])
 param_std           = np.array(sht1_col[10][1:6])
 
 ### import target component of glass from xlsx
+
+compo_name          = np.array(sht2_col[1][1:63])
+
+
 compo_must          = np.array(sht2_col[2][1:63])
 compo_can           = np.array(sht2_col[3][1:63])
 compo_better        = np.array(sht2_col[4][1:63])
@@ -139,9 +143,11 @@ num_population      = int(num_population)
 num_generation      = sht3_col[3][3]
 num_generation      =int(num_generation)
 cxpb                = sht3_col[4][3]
-cx_indpb            =
-mutpb               = sht3_col[5][3]
-mut_indpb           = sht3_col[6][3]
+cx_indpb            = sht3_col[5][3]
+mutpb               = sht3_col[6][3]
+mut_indpb           = sht3_col[7][3]
+
+is_grid_search      = sht3_col[8][3]
 
 print('num_gene_',num_gene)
 print('num_pop_',num_population)
@@ -160,19 +166,22 @@ print(compo_must_can)
 #compo_list = compo_must_can
 #compo_list          = np.nonzero(compo_must)
 
-'''
+
 
 compo_tgt = 5     #-1
 
-
+'''
 ### default values of generative algorithm
-num_gene        = 1000
-num_population  = 2000
-num_generation  = 300
+num_gene        = 100
+num_population  = 5
+num_generation  = 1
 cxpb            = 0.7
 cx_indpb        = 0.5
 mutpb           = 0.1
 mut_indpb       = 0.5
+
+is_grid_search     = 0
+
 
 fit_weights = [-1,-1,-1,0,0,0]
 
@@ -181,6 +190,7 @@ param_num           = 5
 max_component_size  = 62
 compo_list          = [0,2,5,7,8,9,10,11]
 
+'''
 
 ### defalut param_tgt
 
@@ -369,7 +379,7 @@ toolbox.register("select", tools.selNSGA2)
 # toolbox.register("select", tools.selRoulette, k=num_population)
 # toolbox.register("select", tools.selTournament, tournsize=3)
 
-def main():
+def generative_algorithm():
     random.seed(64)
     print(num_population)
     pop = toolbox.population(n=num_population)
@@ -405,15 +415,55 @@ def main():
     return pop, stats, hof
     #return pop, hof
 
+
+def grid_search():
+    individual = np.random.choice(compo_list)
+
+
+
+    return pop, stats, hof
+
+
+
 if __name__ == "__main__":
-    pop, stats, hof = main()
-    #pop, hof = main()
-    hof0_comp, hof0_component_size = analyze_Gene(hof[0])
 
-    param_hof0 = evalProperties(hof0_comp)
-    print(hof0_comp)
+    if is_grid_search == 0:
 
-    for i in range(param_num):
-        print(param_name[i], '_hall of fame is ', param_hof0[i])
+        pop, stats, hof = generative_algorithm()
 
-    print('finish')
+        #pop, hof = main()
+        hof0_comp, hof0_component_size = analyze_Gene(hof[0])
+
+        #hof_comp, hof_component_size = analyze_Gene(hof)
+
+        param_hof0 = evalProperties(hof0_comp)
+        print(hof0_comp)
+
+        df1     = pd.DataFrame(compo_name)
+        df2     = pd.DataFrame(hof0_comp)
+        df1_2   = pd.concat([df1,df2.T],axis=1)
+
+        df3 = pd.DataFrame(param_name)
+        df4 = pd.DataFrame(param_hof0)
+        df3_4 = pd.concat([df3, df4],axis=1)
+
+        print(df1_2)
+        print(df3_4)
+
+        df1_2.to_csv(str(currentdirectory) + '/df1_2.csv')
+        df3_4.to_csv(str(currentdirectory) + '/df3_4.csv')
+
+        df= pd.concat([df1_2,df3_4],axis=1)
+
+        df.to_csv(str(currentdirectory) + '/hof_0.csv')
+
+
+        print(str(currentdirectory) + '/hof_0.csv')
+
+        for i in range(param_num):
+            print(param_name[i], '_hall of fame is ', param_hof0[i])
+
+        print('finish')
+
+    elif is_grid_search == 1:
+        pop, stats, hof = grid_search()

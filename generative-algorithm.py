@@ -159,8 +159,7 @@ print('num_gene_',num_gene)
 print('num_pop_',num_population)
 print('num_generation_',num_generation)
 print('num_gene_',num_gene)
-print('num_gene_',num_gene)
-print('num_gene_',num_gene)
+
 
 ### fit_weights of 5 parameters from xlsx
 fit_weights = np.array(param_priority) * (-1)
@@ -177,7 +176,6 @@ print('compo_must_and_can is ' ,compo_must_and_can)
 compo_list          = np.nonzero(compo_must_and_can)
 compo_list          = np.array(compo_list)
 compo_list          = compo_list.reshape(-1,)
-#compo_list          = list(compo_list)
 
 compo_tgt           = 5     #-1
 
@@ -375,7 +373,6 @@ def mutUniformINTfromlist(individual, INT_list, indpb):
 ### toolbox:attr_bool,individial,population
 
 toolbox.register("attr_bool", np.random.choice, compo_list)
-# toolbox.register("attr_bool", np.random.randint, 0, 3)
 toolbox.register("individual", tools.initRepeat, creator.Individual, toolbox.attr_bool, n=num_gene)
 toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 

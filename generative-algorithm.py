@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 
+### set the defalut encoding 'utf-8' for pyinstaller-exe file
+sys.setdefaultencoding(‘utf-8’)
+
 import random
 import numpy as np
 import pandas as pd
@@ -33,6 +36,9 @@ from deap import base
 from deap import creator
 from deap import tools
 from deap import gp
+
+
+sys.setdefaultencoding(‘utf-8’)
 
 ### default Excel file of GA setting
 xlfile = "ga_setting.xlsx"

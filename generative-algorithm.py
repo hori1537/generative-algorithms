@@ -7,23 +7,17 @@ import random
 import numpy as np
 import pandas as pd
 
-# import time
-# import operator
-# import math
-# from pprint import pprint
-
 import tkinter
 from tkinter import filedialog
 from tkinter import messagebox
 
 import xlrd
 import os
-import os.path
 import sys
 
 from scipy.stats import shapiro
 
-import keras
+#import keras
 from keras import model
 # from keras.utils import plot_model
 # from keras.models import Sequential
@@ -32,11 +26,20 @@ from keras import model
 # from keras.layers import Activation
 
 # from sklearn.model_selection import train_test_split
+
+### algorithm:easimple
 from deap import algorithms
+### base:Toolbox
 from deap import base
+### creator:creator
 from deap import creator
+### tools:Halloffame,stats
 from deap import tools
-from deap import gp
+
+#from deap import gp
+
+# import time
+# import operator
 
 
 os.chdir(os.path.dirname(sys.executable))

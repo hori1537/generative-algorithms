@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-### set the defalut encoding 'utf-8' for pyinstaller-exe file
+### set the defalut encoding 'utf-8' for pyinstaller ' making exe file'
 sys.setdefaultencoding(‘utf-8’)
 
 import random

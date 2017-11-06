@@ -24,6 +24,7 @@ import sys
 from scipy.stats import shapiro
 
 import keras
+from keras import model
 # from keras.utils import plot_model
 # from keras.models import Sequential
 # from keras.layers import Dense, Dropout, Flatten
@@ -38,7 +39,7 @@ from deap import tools
 from deap import gp
 
 
-sys.setdefaultencoding(‘utf-8’)
+os.chdir(os.path.dirname(sys.executable))
 
 ### default Excel file of GA setting
 xlfile = "ga_setting.xlsx"

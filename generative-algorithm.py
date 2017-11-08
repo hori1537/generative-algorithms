@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 import random
 import numpy as np
 import pandas as pd
@@ -7,8 +8,34 @@ import tkinter
 from tkinter import filedialog
 from tkinter import messagebox
 
+### import all modules of h5py for error of pyinstaller
 import h5py
-from h5py import defs
+import h5py.defs
+
+import h5py._conv
+import h5py._errors
+import h5py._objects
+import h5py._proxy
+#import h5py.api_types_ext
+#import h5py.api_types_hdf5
+import h5py.h5
+import h5py.h5a
+import h5py.h5ac
+import h5py.h5d
+import h5py.h5ds
+import h5py.h5f
+import h5py.h5fd
+import h5py.h5g
+import h5py.h5i
+import h5py.h5l
+import h5py.h5o
+import h5py.h5p
+import h5py.h5r
+import h5py.h5s
+import h5py.h5t
+import h5py.h5z
+#import h5py.numpy
+import h5py.utils
 
 import xlrd
 import os
@@ -26,6 +53,7 @@ from deap import creator
 ### tools:Halloffame,stats
 from deap import tools
 
+
 tk = tkinter.Tk()
 
 currentdirectory = os.getcwd()
@@ -33,12 +61,12 @@ currentdirectory = os.getcwd()
 ### default Excel file of GA setting
 xlfile = currentdirectory+ '/setting/ga_setting.xlsx'
 
-'''
+
 ### choose the Excel file of GA setting with tkinter
 xlfile = filedialog.askopenfilename(initialdir=currentdirectory,
                                     title="Setting file of Generative Algorithm",
                                     filetypes=[('Excel File', '*.*')])
-'''
+
 
 ### import parameters of generative algorithm from ga_setting.xlsx or choosen file
 if os.path.exists(xlfile):

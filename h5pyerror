@@ -1,2 +1,0 @@
-pyinstaller  -  hidden-import = h5py.defs test.py
-https://mail.python.org/pipermail/python-list/2015-September/697213.html

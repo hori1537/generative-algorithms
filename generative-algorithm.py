@@ -3,10 +3,30 @@
 import random
 import numpy as np
 import pandas as pd
+from datetime import datetime
+
+import xlrd
+import os
+import sys
+
 
 import tkinter
 from tkinter import filedialog
 from tkinter import messagebox
+
+
+
+import keras
+#from keras import models
+
+### algorithm:easimple
+from deap import algorithms
+### base:Toolbox
+from deap import base
+### creator:creator
+from deap import creator
+### tools:Halloffame,stats
+from deap import tools
 
 ### import all modules of h5py for error of pyinstaller
 import h5py
@@ -36,22 +56,6 @@ import h5py.h5t
 import h5py.h5z
 #import h5py.numpy
 import h5py.utils
-
-import xlrd
-import os
-import sys
-
-import keras
-#from keras import models
-
-### algorithm:easimple
-from deap import algorithms
-### base:Toolbox
-from deap import base
-### creator:creator
-from deap import creator
-### tools:Halloffame,stats
-from deap import tools
 
 
 tk = tkinter.Tk()
@@ -470,17 +474,19 @@ if __name__ == "__main__":
         df4 = pd.DataFrame(param_hof0)
         df3_4 = pd.concat([df3, df4], axis=1)
 
-        print(df1_2)
-        print(df3_4)
+        tdatetime = datetime.now()
+        foldername = 'result/' + tdatetime.strftime('%Y%m%d-%H%M%S')
+        os.mkdir(foldername)
 
-        df1_2.to_csv(str(currentdirectory) + '/result/df1_2.csv')
-        df3_4.to_csv(str(currentdirectory) + '/result/df3_4.csv')
+
+        df1_2.to_csv(str(currentdirectory) + foldername + '/df1_2.csv')
+        df3_4.to_csv(str(currentdirectory) +  foldername + '/df3_4.csv')
 
         df = pd.concat([df1_2, df3_4], axis=1)
 
-        df.to_csv(str(currentdirectory) + '/result/hof_0.csv')
+        df.to_csv(str(currentdirectory) +  foldername + '/hof_0.csv')
 
-        print(str(currentdirectory) + '/result/hof_0.csv')
+        print(str(currentdirectory) +  foldername + '/hof_0.csv')
         print('fit_weights is ', fit_weights)
 
         for i in range(param_num):

@@ -205,7 +205,7 @@ component_list = component_list.reshape(-1, )
 component_target = 5  # -1
 
 '''
-### default values of generative algorithm
+### default setting of generative algorithm
 num_gene        = 100
 num_population  = 5
 num_generation  = 1
@@ -216,13 +216,13 @@ mut_indpb       = 0.5
 is_grid_search     = 0
 '''
 
-### defalut values of setting
+### defalut setting
 # param_num           = 5
 # max_component_size  = 62
 # component_list          = [0,2,5,7,8,9,10,11]
 
 '''
-### defalut param_target
+### defalut parameter values
 param_name = ['ABBE','DENS','FRAC','POIS','YOUN']
 param_target = np.empty(param_num)
 param_avg = np.empty(param_num)
@@ -273,8 +273,6 @@ YOUN_target= 90.0   #0
 
 
 ### import predict models of deeplearning
-
-
 model = [0] * param_num
 for i in range(5):
     #modelfile = ('C:\deeplearning/model/model/model_' + param_name[i] + '_n.h5')
@@ -288,6 +286,7 @@ for i in range(5):
         messagebox.showerror(title='error', message=(modelfile, ' does not exist. Then program exit'))
         sys.exit()
 
+        
 ### creator
 creator.create("FitnessMulti", base.Fitness, weights=fit_weights)
 # creator.create("FitnessMulti", base.Fitness, weights = (-1.0,0.0001))
@@ -416,7 +415,6 @@ def generative_algorithm():
 
     pop = toolbox.population(n=num_population)
     #hof = tools.HallOfFame(num_population, similar=np.array_equal)
-
     hof = tools.ParetoFront(similar=np.array_equal)
     # hof = tools.HallOfFame(1)
 
